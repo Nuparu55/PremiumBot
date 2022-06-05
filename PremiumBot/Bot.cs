@@ -29,27 +29,25 @@ namespace PremiumBot
         {
             //DbInitializer.Init();
 
-            using (var cts = new CancellationTokenSource())
+            using var cts = new CancellationTokenSource();
+
+            var opt = new ReceiverOptions
             {
+                AllowedUpdates = { }
+            };
 
-                var opt = new ReceiverOptions
-                {
-                    AllowedUpdates = { }
-                };
+            _client.StartReceiving(
+                updateHandler: HandleUpdateAsync,
+                errorHandler: HandlePollingErrorAsync,
+                receiverOptions: opt,
+                cancellationToken: cts.Token
+                );
 
-                _client.StartReceiving(
-                    updateHandler: HandleUpdateAsync,
-                    errorHandler: HandlePollingErrorAsync,
-                    receiverOptions: opt,
-                    cancellationToken: cts.Token
-                    );
+            _me = await _client.GetMeAsync();
+            Console.WriteLine($"ID = {_me.Id}, Name = {_me.Username}, {_me.FirstName}, {_me.LastName}, IsBot = {_me.IsBot}");
+            Console.ReadLine();
 
-                _me = await _client.GetMeAsync();
-                Console.WriteLine($"ID = {_me.Id}, Name = {_me.Username}, {_me.FirstName}, {_me.LastName}, IsBot = {_me.IsBot}");
-                Console.ReadLine();
-
-                cts.Cancel();
-            }
+            cts.Cancel();
         }
 
         async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
@@ -60,7 +58,9 @@ namespace PremiumBot
             if (update.Message == null)
                 return;
 
-            _cmds = new Commands(botClient, cancellationToken);
+            using var db = new BotDBContext();
+
+            _cmds = new Commands(botClient, cancellationToken, db);
             _achEvnt = new AchievmentEvents(botClient, cancellationToken);
 
             switch (update.Message.Type)

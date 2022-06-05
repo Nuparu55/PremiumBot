@@ -11,18 +11,22 @@ namespace PremiumBot.Data
 {
     public class BotDBContext : DbContext
     {
-        private string _connectionString;
         public BotDBContext()
         {
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(Configuration.DB_CONNECTION_STRING);
+            optionsBuilder.UseLazyLoadingProxies().UseSqlite(Configuration.DB_CONNECTION_STRING);
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Title> Titles { get; set; }
         public DbSet<Achievment> Achievments { get; set; }
+        public DbSet<Armor> Armors { get; set; }
+        public DbSet<Food> Foods { get; set; }
+        public DbSet<Hero> Heroes { get; set; }
+        public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<Juice> Juices { get; set; }
     }
 }

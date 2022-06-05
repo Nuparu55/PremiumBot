@@ -11,9 +11,11 @@ namespace PremiumBot.Data.Models
         public int Id { get; set; }
         public long TGID { get; set; }
         public string Name { get; set; }
-        public int Money { get; set; }
+        public int Fragments { get; set; }
+        public int AuthorCoins { get; set; }
         public bool IsAdmin { get; set; }
         public virtual List<Achievment> Achievments { get; set; }
+        public virtual Hero Hero { get; set; }
 
         //Activity counters
         public int MessagesCount { get; set; }

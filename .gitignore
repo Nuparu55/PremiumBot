@@ -362,3 +362,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/PremiumBot/DataBase.db
+*.db-shm
+*.db-wal
